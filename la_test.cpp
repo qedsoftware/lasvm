@@ -49,6 +49,7 @@ char split_file_name[1024]="\0";         // filename for the splits
 int binary_files=0;
 vector <ID> splits;
 int max_index=0;
+int reporting_interval=100;
 
 
 void exit_with_help()
@@ -428,8 +429,6 @@ out2:
 }
 
 
-
-
 int libsvm_load_model(const char *model_file_name)
 // saves the model in the same format as LIBSVM
 {
@@ -524,21 +523,53 @@ void test(char *output_name)
     FILE *fp=fopen(output_name,"w");
     int i,j;
     double y;
-    double acc=0;
+    int y_th; // thresholded version of y
+    double acc=0; // overall accuracy
 
-    for(i=0; i<m; i++)
+    // rows = predictions (0 or 1)
+    // cols = labels (0 or 1)
+    int contingency_table[2][2] = {{0,0},{0,0}};
+
+    for(i=0; i<m; i++) // iterate through trainig data
     {
+        if (0 == i % reporting_interval)
+        {
+            printf("Processing training record #%d out of %d (%.4lf%% complete) ...\n", i, m, double(i)/m);
+        }
+
+        // build linear combination of inner products with support vectors
         y=-b0;
         for(j=0; j<msv; j++)
         {
             y+=alpha[j]*kernel(i,j,NULL);
         }
-        if(y>=0) y=1;
-        else y=-1;
-        if(((int)y)==Y[i]) acc++;
+
+        // prediction = threshold( linear combination )
+        y_th = (y>=0) ? 1 : -1; 
+
+        // overall accuracy
+        if(y_th==Y[i]) acc++;
+
+        // update contingency table
+        contingency_table[ (y_th>0)?1:0 ][ (Y[i]>0)?1:0 ]++;
     }
 
-    printf("accuracy= %g (%d/%d)\n",(acc/m)*100,((int)acc),m);
+    // print to stdout
+    printf("accuracy: %g (%d/%d)\n",(acc/m)*100,((int)acc),m);
+    printf("contingency table:\n");
+    printf("%10s%10s%10s%10s\n","","","labels","");
+    printf("%10s%10s%10s%10s\n","","","-1","+1");
+    printf("%10s%10s%10d%10d\n","pred","-1",contingency_table[0][0],contingency_table[0][1]);
+    printf("%10s%10s%10d%10d\n","","+1",contingency_table[1][0],contingency_table[1][1]);
+
+    // print to file
+    fprintf(fp,"accuracy: %g (%d/%d)\n",(acc/m)*100,((int)acc),m);
+    fprintf(fp,"contingency table:\n");
+    fprintf(fp,"%10s%10s%10s%10s\n","","","labels","");
+    fprintf(fp,"%10s%10s%10s%10s\n","","","-1","+1");
+    fprintf(fp,"%10s%10s%10d%10d\n","pred","-1",contingency_table[0][0],contingency_table[0][1]);
+    fprintf(fp,"%10s%10s%10d%10d\n","","+1",contingency_table[1][0],contingency_table[1][1]);
+
     fclose(fp);
 }
 
