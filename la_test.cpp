@@ -534,7 +534,7 @@ void test(char *output_name)
     {
         if (0 == i % reporting_interval)
         {
-            printf("Processing training record #%d out of %d (%.4lf%% complete) ...\n", i, m, double(i)/m);
+            printf("Processing training record #%d out of %d (%.4lf%% complete) ...\n", i, m, double(i)/m * 100);
         }
 
         // build linear combination of inner products with support vectors
@@ -555,7 +555,7 @@ void test(char *output_name)
     }
 
     // print to stdout
-    printf("accuracy: %g (%d/%d)\n",(acc/m)*100,((int)acc),m);
+    printf("accuracy: %g%% (%d/%d)\n",(acc/m)*100,((int)acc),m);
     printf("contingency table:\n");
     printf("%10s%10s%10s%10s\n","","","labels","");
     printf("%10s%10s%10s%10s\n","","","-1","+1");
@@ -563,7 +563,7 @@ void test(char *output_name)
     printf("%10s%10s%10d%10d\n","","+1",contingency_table[1][0],contingency_table[1][1]);
 
     // print to file
-    fprintf(fp,"accuracy: %g (%d/%d)\n",(acc/m)*100,((int)acc),m);
+    fprintf(fp,"accuracy: %g%% (%d/%d)\n",(acc/m)*100,((int)acc),m);
     fprintf(fp,"contingency table:\n");
     fprintf(fp,"%10s%10s%10s%10s\n","","","labels","");
     fprintf(fp,"%10s%10s%10s%10s\n","","","-1","+1");
