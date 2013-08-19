@@ -1,26 +1,26 @@
 /***********************************************************************
- * 
+ *
  *  LUSH Lisp Universal Shell
  *    Copyright (C) 2002 Leon Bottou, Yann Le Cun, AT&T Corp, NECI.
  *  Includes parts of TL3:
  *    Copyright (C) 1987-1999 Leon Bottou and Neuristique.
  *  Includes selected parts of SN3.2:
  *    Copyright (C) 1991-2001 AT&T Corp.
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
  *  (at your option) any later version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111, USA
- * 
+ *
  ***********************************************************************/
 
 /***********************************************************************
@@ -36,7 +36,7 @@
 #include "vector.h"
 
 #ifdef __cplusplus__
-extern "C" { 
+extern "C" {
 #if 0
 }
 #endif
@@ -50,7 +50,7 @@ extern "C" {
 
 /* --- lasvm_kernel_t
    This is the type for user defined symmetric kernel functions.
-   It returns the Gram matrix element at position <i>,<j>. 
+   It returns the Gram matrix element at position <i>,<j>.
    Argument <closure> represents arbitrary additional information.
 */
 #ifndef LASVM_KERNEL_T_DEFINED
@@ -64,14 +64,14 @@ typedef double (*lasvm_kernel_t)(int i, int j, void* closure);
 /* USEFUL KERNELS */
 
 
-typedef struct lasvm_vectorproblem_s 
+typedef struct lasvm_vectorproblem_s
 {
-  int l;			/* number of examples */
-  int n;			/* dimension of examples */
-  lasvm_vector_t **x;		/* x[0]...x[l-1] */
-  double *y;			/* category */
-  double *xnorm;		/* for rbf kernel: l2-norm of the x[i] */
-  double rbfgamma;		/* for rbf kernel: gamma */
+    int l;			/* number of examples */
+    int n;			/* dimension of examples */
+    lasvm_vector_t **x;		/* x[0]...x[l-1] */
+    double *y;			/* category */
+    double *xnorm;		/* for rbf kernel: l2-norm of the x[i] */
+    double rbfgamma;		/* for rbf kernel: gamma */
 } lasvm_vectorproblem_t;
 
 
@@ -84,14 +84,14 @@ double lasvm_vectorproblem_rbf_kernel(int i, int j, void *problem);
 /* MORE USEFUL KERNELS */
 
 
-typedef struct lasvm_sparsevectorproblem_s 
+typedef struct lasvm_sparsevectorproblem_s
 {
-  int l;			/* number of examples */
-  int n;			/* dimension of examples */
-  lasvm_sparsevector_t **x;	/* x[0]...x[l-1] */
-  double *y;			/* category */
-  double *xnorm;		/* for rbf kernel: l2-norm of the x[i] */
-  double rbfgamma;		/* for rbf kernel: gamma */
+    int l;			/* number of examples */
+    int n;			/* dimension of examples */
+    lasvm_sparsevector_t **x;	/* x[0]...x[l-1] */
+    double *y;			/* category */
+    double *xnorm;		/* for rbf kernel: l2-norm of the x[i] */
+    double rbfgamma;		/* for rbf kernel: gamma */
 } lasvm_sparsevectorproblem_t;
 
 
